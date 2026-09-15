@@ -1,19 +1,24 @@
 # NoFences
 
-A Windows desktop app (WinForms, .NET Framework 4.8) that recreates Stardock Fences: draggable/resizable
+A Windows desktop app (WinForms, .NET 10, SDK-style project) that recreates Stardock Fences: draggable/resizable
 "fence" windows glued to the desktop, each holding shortcuts to files/folders.
 
 ## Build
 
-No CI, tests, or lint config exist in this repo — build with MSBuild / Visual Studio only.
+No CI, tests, or lint config exist in this repo — build with the .NET SDK or Visual Studio.
 
 ```powershell
-# From repo root, using the VS Developer Command Prompt / vcvars environment
-msbuild NoFences.sln /p:Configuration=Release /p:Platform=AnyCPU
+# From repo root
+dotnet build NoFences.sln -c Release
+dotnet run --project NoFences\NoFences.csproj
 ```
 
-- Open `NoFences.sln` in Visual Studio (2019+) and build/run with F5 — this is the primary workflow.
-- Target framework is `net48`; platform target is `x64` for both Debug and Release (see `NoFences.csproj`).
+- Open `NoFences.sln` in Visual Studio (2022 17.14+, with the .NET 10 SDK installed) and build/run with F5 — this
+  also works.
+- Target framework is `net10.0-windows`; platform target is `x64` for both Debug and Release (see
+  `NoFences.csproj`, an SDK-style project — most files are included implicitly via globbing, not listed explicitly).
+- Assembly metadata (title, version, copyright, etc.) lives in `<PropertyGroup>` in the `.csproj`, not in a
+  `Properties\AssemblyInfo.cs` file.
 - There is no test project and no automated tests. Verify changes by running the app manually.
 
 ## Architecture
