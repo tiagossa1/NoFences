@@ -142,6 +142,15 @@
   <data name="renameToolStripMenuItem.Text" xml:space="preserve">
     <value>重命名</value>
   </data>
+  <data name="RemoveFenceConfirmation.Text" xml:space="preserve">
+    <value>确定要移除此围栏吗?</value>
+  </data>
+  <data name="RemoveFenceConfirmation.Caption" xml:space="preserve">
+    <value>移除</value>
+  </data>
+  <data name="NewFence.DefaultName" xml:space="preserve">
+    <value>新围栏</value>
+  </data>
   <data name="titleSizeToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>180, 22</value>
   </data>

@@ -6,7 +6,8 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using static NoFences.Win32.WindowUtil;
+using static NoFences.Win32.WindowMessages;
+using static NoFences.Win32.WindowStyleHelper;
 
 namespace NoFences
 {
@@ -45,6 +46,9 @@ namespace NoFences
 
         private readonly ThumbnailProvider thumbnailProvider = new ThumbnailProvider();
 
+        private static readonly System.ComponentModel.ComponentResourceManager resources =
+            new System.ComponentModel.ComponentResourceManager(typeof(FenceWindow));
+
         private void ReloadFonts()
         {
             var family = new FontFamily("Segoe UI");
@@ -57,7 +61,7 @@ namespace NoFences
             InitializeComponent();
             DropShadow.ApplyShadows(this);
             BlurUtil.EnableBlur(Handle);
-            WindowUtil.HideFromAltTab(Handle);
+            HideFromAltTab(Handle);
             DesktopUtil.GlueToDesktop(Handle);
             //DesktopUtil.PreventMinimize(Handle);
             logicalTitleHeight = (fenceInfo.TitleHeight < 16 || fenceInfo.TitleHeight > 100) ? 35 : fenceInfo.TitleHeight;
@@ -97,13 +101,13 @@ namespace NoFences
 
             // Mouse leave
             var myrect = new Rectangle(Location, Size);
-            if (m.Msg == 0x02a2 && !myrect.IntersectsWith(new Rectangle(MousePosition, new Size(1, 1))))
+            if (m.Msg == WM_MOUSELEAVE && !myrect.IntersectsWith(new Rectangle(MousePosition, new Size(1, 1))))
             {
                 Minify();
             }
 
             // Prevent maximize
-            if ((m.Msg == WM_SYSCOMMAND) && m.WParam.ToInt32() == 0xF032)
+            if ((m.Msg == WM_SYSCOMMAND) && (m.WParam.ToInt32() & SC_COMMAND_MASK) == SC_MAXIMIZE)
             {
                 m.Result = IntPtr.Zero;
                 return;
@@ -154,7 +158,8 @@ namespace NoFences
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, "Really remove this fence?", "Remove", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show(this, resources.GetString("RemoveFenceConfirmation.Text"),
+                resources.GetString("RemoveFenceConfirmation.Caption"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 FenceManager.Instance.RemoveFence(fenceInfo);
                 Close();
@@ -400,7 +405,7 @@ namespace NoFences
 
         private void newFenceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FenceManager.Instance.CreateFence("New fence");
+            FenceManager.Instance.CreateFence(resources.GetString("NewFence.DefaultName"));
         }
 
         private void FenceWindow_FormClosed(object sender, FormClosedEventArgs e)
